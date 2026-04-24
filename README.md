@@ -1,44 +1,66 @@
-# erc20-compliance-playground
+## Foundry
 
-## Short overview
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-This MVP is a simplified permissioned token system built around three contracts: `ComplianceToken`, `MockIdentityRegistry`, and `ComplianceService`.
+Foundry consists of:
 
-The token can only be minted to and transferred between approved investors, and every transfer is checked against compliance rules before execution.
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-## MVP scope
+## Documentation
 
-- ERC-20 token with minting
-- role-based access control
-- mock identity registry
-- compliance checks before transfer
-- country block rule
-- max investors rule
-- minimum residual balance rule
-- lock-up rule
-- unit and integration tests
-- local deployment on Anvil
+https://book.getfoundry.sh/
 
-## Architecture
+## Usage
 
-The MVP is built around three main contracts:
+### Build
 
-- `ComplianceToken` — the main ERC-20 token contract with minting, pause/freeze restrictions, and transfer hooks
-- `MockIdentityRegistry` — a simplified registry storing wallet registration status, verification status, and country code
-- `ComplianceService` — a rule engine that validates transfers before execution
+```shell
+$ forge build
+```
 
-### High-level flow
+### Test
 
-```text
-User / Agent
-    |
-    v
-ComplianceToken
-    | \
-    |  \__ checks admin restrictions (pause / freeze / mint permissions)
-    |
-    v
-ComplianceService
-    |
-    v
-MockIdentityRegistry
+```shell
+$ forge test
+```
+
+### Format
+
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
