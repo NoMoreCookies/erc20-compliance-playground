@@ -75,3 +75,35 @@ ComplianceToken.transfer()
    |
    v
 Transfer executed or reverted
+
+## Planned Events
+
+- `IdentityRegistered(address investor)`
+- `IdentityRemoved(address investor)`
+- `ComplianceServiceUpdated(address newComplianceService)`
+- `IdentityRegistryUpdated(address newIdentityRegistry)`
+- `CountryBlocked(uint16 countryCode)`
+- `CountryUnblocked(uint16 countryCode)`
+- `MaxInvestorsUpdated(uint256 newLimit)`
+- `MaxBalanceUpdated(uint256 newLimit)`
+- `MinBalanceUpdated(uint256 newLimit)`
+- `TokensFrozen(address investor, uint256 amount)`
+- `TokensUnfrozen(address investor, uint256 amount)`
+
+
+## Planned Roles
+
+### Owner / Admin
+Responsible for deploying contracts and configuring system addresses.
+
+### Agent
+Can mint tokens, burn tokens, and perform administrative token operations.
+
+### Compliance Officer
+Can configure compliance rules such as blocked countries, investor limits, and balance limits.
+
+### Investor
+A verified user who can hold and transfer tokens if compliance checks pass.
+
+### Mock KYC Provider
+In the MVP, this is simulated by the admin registering addresses in MockIdentityRegistry.
