@@ -50,3 +50,28 @@ It maintains a set of modular sub-rules:
  - MinBalance
  - TimeRestriction
  - ExchangeMonthlyLimit
+
+ ## Interaction Flow
+
+1. Admin registers an investor address in MockIdentityRegistry.
+2. Investor A calls `transfer(to, amount)` on ComplianceToken.
+3. ComplianceToken checks whether both sender and receiver are verified in MockIdentityRegistry.
+4. ComplianceToken calls ComplianceService to validate the transfer rules.
+5. ComplianceService checks active compliance rules such as country block, max balance, min balance and time restrictions.
+6. If all checks pass, ComplianceToken executes the transfer.
+7. If any check fails, the transaction reverts.
+
+## Simple diagram
+
+
+Investor
+   |
+   v
+ComplianceToken.transfer()
+   |
+   |-- checks --> MockIdentityRegistry
+   |
+   |-- checks --> ComplianceService
+   |
+   v
+Transfer executed or reverted
