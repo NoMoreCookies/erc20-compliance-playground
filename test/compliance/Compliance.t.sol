@@ -52,7 +52,7 @@ contract ComplianceTokenTest is Test {
         uint256 amountToMajorTom = 1_250;   // 12.50 SMRT
 
         bool success1 = token.transfer(groundControl, amountToGroundControl);
-        
+
         assertTrue(success1);
 
         vm.prank(groundControl);
@@ -66,10 +66,10 @@ contract ComplianceTokenTest is Test {
     }
 
     function testCannotTransferMoreThanBalance() public {
-
         uint256 tooMuch = INITIAL_SUPPLY + 1;
 
         vm.expectRevert();
-        token.transfer(groundControl, tooMuch);
+        bool success = token.transfer(groundControl, tooMuch);
+        assertFalse(success);
     }
 }
