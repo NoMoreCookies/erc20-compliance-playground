@@ -19,7 +19,7 @@ contract ComplianceTokenTest is Test {
         token = new ComplianceToken(INITIAL_SUPPLY);
     }
 
-    function testNameIntegration() public {
+    function testNameIntegration() public view {
         assertEq(token.name(), "SmartToken");
     }
 
@@ -37,7 +37,6 @@ contract ComplianceTokenTest is Test {
     }
 
     function testCanTransferTokens() public {
-
         uint256 amount = 1_500; // 15 SMRT
 
         bool success = token.transfer(groundControl, amount);
