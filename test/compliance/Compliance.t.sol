@@ -13,10 +13,12 @@ contract ComplianceTokenTest is Test {
     address groundControl = address(0x1);
     address majorTom = address(0x2);
 
+
     uint256 constant INITIAL_SUPPLY = 10_000;
+    uint256 constant MAX_SUPPLY = 100_000;
 
     function setUp() public {
-        token = new ComplianceToken(INITIAL_SUPPLY);
+        token = new ComplianceToken(INITIAL_SUPPLY, MAX_SUPPLY);
     }
 
     function testNameIntegration() public view {
@@ -71,5 +73,78 @@ contract ComplianceTokenTest is Test {
         vm.expectRevert();
         bool success = token.transfer(groundControl, tooMuch);
         assertFalse(success);
+    }
+
+    function testNonAgentCannotMint() public {
+        vm.prank(majorTom);
+
+        vm.expectRevert();
+        token.mint(majorTom, 1_000);
+
+    }
+
+    function testAgentCanFreezeAddress() public {
+        token.setAddressFrozen(groundControl, true);
+
+        assertTrue(token.isFrozen(groundControl));
+    }
+
+
+    function testNonAgentCannotFreezeAddress() public {
+        vm.prank(majorTom);
+
+        vm.expectRevert();
+        token.setAddressFrozen(groundControl, true);
+    }
+
+    function testCannotTransferToFrozenAccount() public {
+        token.setAddressFrozen(groundControl, true);
+
+        vm.expectRevert("Receiver is frozen");
+        token.transfer(groundControl, 1_000);
+    }
+
+    function testFrozenAccountCannotTransferOut() public {
+        token.transfer(groundControl, 2_000);
+
+        token.setAddressFrozen(groundControl, true);
+
+        vm.prank(groundControl);
+        vm.expectRevert("Sender is frozen");
+        token.transfer(majorTom, 1_000);
+    }
+
+    function testConstructorRevertsWhenInitialSupplyExceedsMaxSupply() public {
+        vm.expectRevert("Initial supply cannot exceed max supply");
+
+        new ComplianceToken(100_001, 100_000);
+    }
+
+    function testNonAgentCannotPause() public {
+        vm.prank(majorTom);
+
+        vm.expectRevert();
+        token.pause();
+    }
+
+    function testCanTransferAfterUnpause() public {
+        token.pause();
+        token.unpause();
+
+        bool success = token.transfer(groundControl, 1_000);
+
+        assertTrue(success);
+        assertEq(token.balanceOf(groundControl), 1_000);
+    }
+
+
+    function testHappyPathTransfer() public {
+        uint256 amount = 1_000;
+
+        bool success = token.transfer(groundControl, amount);
+
+        assertTrue(success);
+        assertEq(token.balanceOf(groundControl), amount);
+        assertEq(token.balanceOf(deployer), INITIAL_SUPPLY - amount);
     }
 }
